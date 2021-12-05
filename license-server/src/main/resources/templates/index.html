@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>许可证颁发中心</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th colspan="2">服务器参数</th>
+    </tr>
+    <tr>
+        <th>服务器时间</th>
+        <td data-th-text="${now}"></td>
+    </tr>
+    <tr>
+        <th>主板序列号</th>
+        <td data-th-text="${serverInfo.mainBoardSerial}"></td>
+    </tr>
+    <tr>
+        <th>CPU序列号</th>
+        <td data-th-text="${serverInfo.cpuSerial}"></td>
+    </tr>
+    <tr>
+        <th>IP地址集合</th>
+        <td>
+            <div data-th-each="ipAddress : ${serverInfo.ipAddressList}">
+                <span data-th-text="${ipAddress}"></span>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <th>MAC地址集合</th>
+        <td>
+            <div data-th-each="macAddress : ${serverInfo.macAddressList}">
+                <span data-th-text="${macAddress}"></span>
+            </div>
+        </td>
+    </tr>
+</table>
+<hr>
+<form data-th-action="@{/license/generator}" method="post" onsubmit="return validate()">
+    <table border="1">
+        <tr>
+            <th colspan="2">客户端许可证</th>
+        </tr>
+        <tr>
+            <th>
+                <label>是否为开发环境</label>
+            </th>
+            <td>
+                <input id="dev" autocomplete="off" name="dev" type="radio" value="true"><label for="dev">是</label>
+                <input id="prod" autocomplete="off" name="dev" type="radio" value="false" checked><label for="prod">否</label>
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="issuedTime">生效时间</label>
+            </th>
+            <td>
+                <input id="issuedTime" autocomplete="off" placeholder="yyyy-MM-dd HH:mm:ss" name="issuedTime"
+                       type="text">
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="expiryTime">过期时间<font color="red">*</font></label>
+            </th>
+            <td>
+                <input id="expiryTime" autocomplete="off" placeholder="yyyy-MM-dd HH:mm:ss" required name="expiryTime"
+                       type="text">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="生成"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script>
+    function validate() {
+        const issuedTimeInput = document.getElementById('issuedTime');
+        // 生效时间
+        let issuedTime = issuedTimeInput.value;
+        const expiryTimeInput = document.getElementById('expiryTime');
+        // 过期时间
+        let expiryTime = expiryTimeInput.value;
+        if (!expiryTime) {
+            alert('请填写过期时间！')
+            return false;
+        }
+        // yyyy-MM-dd 格式校验
+        const dateRegExp = /^\d{4}(-)\d{1,2}(-)\d{1,2}$/;
+        // yyyy-MM-dd HH:mm:ss 格式校验
+        const dateTimeRegExp = /^\d{4}(-)\d{1,2}(-)\d{1,2} \d{1,2}(:)\d{1,2}(:)\d{1,2}$/;
+        if (issuedTime) {
+            if (dateRegExp.test(issuedTime)) {
+                issuedTime += ' 00:00:00';
+                issuedTimeInput.value = issuedTime;
+            } else if (!dateTimeRegExp.test(issuedTime)) {
+                alert('请按照”yyyy-MM-dd“或者”yyyy-MM-dd HH:mm:ss”格式填写生效时间！')
+                return false;
+            }
+        }
+        if (dateRegExp.test(expiryTime)) {
+            expiryTime += ' 00:00:00';
+            expiryTimeInput.value = expiryTime;
+        } else if (!dateTimeRegExp.test(expiryTime)) {
+            alert('请按照”yyyy-MM-dd“或者”yyyy-MM-dd HH:mm:ss”格式填写过期时间！')
+            return false;
+        }
+        return true;
+    }
+</script>
+</html>

@@ -1,0 +1,5 @@
+/.idea/
+/license-parent.iml
+/license-client/target/
+/license-common/target/
+/license-server/target/

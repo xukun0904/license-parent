@@ -1,0 +1,26 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: license
+  thymeleaf:
+    cache: false
+license:
+  # 私钥名称
+  alias: privateKey
+  # 许可证subject
+  subject: middle
+  # 私钥密码
+  key-pass: private_password1234
+  # 公钥密码
+  store-pass: public_password1234
+  # 私钥所在路径，空值默认为应用同层目录下privateKeys.keystore
+  # store-path: /root/privateKeys.keystore
+  # 颁布许可证客户类型，离线环境下不改
+  consumer-type: user
+  # 颁布许可证数量，离线环境下不改
+  consumer-amount: 1
+  # 许可证描述
+  description: 中部项目许可证
+  # 证书拥有及发布者信息
+  holder-and-issuer: CN=localhost, OU=localhost, O=localhost, L=SH, ST=SH, C=CN
